@@ -65,30 +65,30 @@ SPortParams readPortParams(const std::vector<std::string> &params, std::string &
 
 void printData(XModem &protocol) {
     std::vector<std::string> parity{
-        "нет",
-        "по нечётности",
-        "по чётности",
-        "по единичному биту",
-        "по нулевому биту"
+        "РЅРµС‚",
+        "РїРѕ РЅРµС‡С‘С‚РЅРѕСЃС‚Рё",
+        "РїРѕ С‡С‘С‚РЅРѕСЃС‚Рё",
+        "РїРѕ РµРґРёРЅРёС‡РЅРѕРјСѓ Р±РёС‚Сѓ",
+        "РїРѕ РЅСѓР»РµРІРѕРјСѓ Р±РёС‚Сѓ"
     },
-        stop_bits{ "один", "полтора", "два" };
+        stop_bits{ "РѕРґРёРЅ", "РїРѕР»С‚РѕСЂР°", "РґРІР°" };
 
     DCB dcb = protocol.getDCB();
     std::vector<std::string> captions{
-        "ООО «НПК «Электрооптика» ",
-        "GLD_BOOTLOADER © ",
-        "версия: 1.1.0 "
+        "РћРћРћ В«РќРџРљ В«Р­Р»РµРєС‚СЂРѕРѕРїС‚РёРєР°В» ",
+        "GLD_BOOTLOADER В© ",
+        "РІРµСЂСЃРёСЏ: 1.1.0 "
     };
 
-    captions.push_back("порт: " + protocol.getPortName() +
+    captions.push_back("РїРѕСЂС‚: " + protocol.getPortName() +
         "; " + std::to_string(dcb.BaudRate) +
-        " бод; " + std::to_string(dcb.ByteSize) +
-        " байт; контроль: " +
+        " Р±РѕРґ; " + std::to_string(dcb.ByteSize) +
+        " Р±Р°Р№С‚; РєРѕРЅС‚СЂРѕР»СЊ: " +
         parity.at(dcb.Parity) +
-        "; стоповые биты: " +
+        "; СЃС‚РѕРїРѕРІС‹Рµ Р±РёС‚С‹: " +
         stop_bits.at(dcb.StopBits)
     );
-    captions.push_back("имя файла: " + protocol.getFileName());
+    captions.push_back("РёРјСЏ С„Р°Р№Р»Р°: " + protocol.getFileName());
 
     std::string caption = captions.at(0) +
         captions.at(1) +
@@ -131,7 +131,7 @@ uint32_t flashUpdate(const uint32_t gld_num, const std::vector<std::string> &par
         if ((std::string::npos != i.find("0x")) || (std::string::npos != i.find("0X"))) {
             gld_cmd.push_back(fromStringToHex(i));
         } else {
-            // TODO: разобраться с очисткой буфера
+            // TODO: СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ СЃ РѕС‡РёСЃС‚РєРѕР№ Р±СѓС„РµСЂР°
             if (gld_cmd.size()) {
                 protocol.sendPack(gld_cmd, Protocol::PR_NONE, 1);
                 //protocol.port->sendDataPack(gld_cmd, 1);
@@ -173,7 +173,7 @@ uint32_t main(const uint32_t argc, char** argv) {
 
     flashUpdate(0, cmd_params);
 
-    std::cout << "нажми 'enter' для выхода..." << std::endl;
+    std::cout << "РЅР°Р¶РјРё 'enter' РґР»СЏ РІС‹С…РѕРґР°..." << std::endl;
     getchar();
 
     return 0;

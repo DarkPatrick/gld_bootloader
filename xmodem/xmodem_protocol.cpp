@@ -66,7 +66,7 @@ uint32_t XModem::sendPack(std::vector<uint8_t> &data, const Protocol protocol, c
             (data.size() != PackSize::XMODEM_SIZE)) ||
             ((protocol == Protocol::PR_XMODEM_1K) &&
             (data.size() != PackSize::XMODEM_1K_SIZE))) {
-        err.addError("ошибка: несовпадение размера пакета с указанным в протоколе...");
+        err.addError("РѕС€РёР±РєР°: РЅРµСЃРѕРІРїР°РґРµРЅРёРµ СЂР°Р·РјРµСЂР° РїР°РєРµС‚Р° СЃ СѓРєР°Р·Р°РЅРЅС‹Рј РІ РїСЂРѕС‚РѕРєРѕР»Рµ...");
         return 0;
     }
 
@@ -94,7 +94,7 @@ uint32_t XModem::sendPack(std::vector<uint8_t> &data, const Protocol protocol, c
 
 void XModem::cancelTransmission() {
     std::vector<uint8_t> send_data = wrapData(HeaderBytes::EOT);
-    // послать данные
+    // РїРѕСЃР»Р°С‚СЊ РґР°РЅРЅС‹Рµ
 }
 
 
@@ -128,7 +128,7 @@ uint32_t XModem::loadFile(const Protocol protocol) {
     std::ifstream h_file(file_name, std::ios::binary);
 
     if (!h_file.is_open()) {
-        err.addError("ошибка: не удалось открыть файл...");
+        err.addError("РѕС€РёР±РєР°: РЅРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РєСЂС‹С‚СЊ С„Р°Р№Р»...");
         return 0;
     }
 
@@ -140,7 +140,7 @@ uint32_t XModem::loadFile(const Protocol protocol) {
             break;
         case Protocol::PR_XMODEM_1K:
             pack_size = PackSize::XMODEM_1K_SIZE;
-            // так надо
+            // С‚Р°Рє РЅР°РґРѕ
             default_crc = CRC::CRC_16;
             break;
         case Protocol::PR_NONE:
@@ -202,7 +202,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
     port->clearInputBuffer();
 
-    std::cout << std::endl << "готов к передаче файла..." << std::endl;
+    std::cout << std::endl << "РіРѕС‚РѕРІ Рє РїРµСЂРµРґР°С‡Рµ С„Р°Р№Р»Р°..." << std::endl;
 
     uint32_t trans_started = 0, wait_for_resp = 0, finishing_job = 0, all_done = 0;
     size_t packs_sent = 0;
@@ -223,20 +223,20 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
                     finishing_job = 0;
                     packs_sent = 0;
                     restartTransmission();
-                    std::cout << " передача началась..." << std::endl;
+                    std::cout << " РїРµСЂРµРґР°С‡Р° РЅР°С‡Р°Р»Р°СЃСЊ..." << std::endl;
                 } else if (wait_for_resp) {
                     if (ServiceCmds::ACK == res) {
                         if (finishing_job) {
                             wait_for_resp = 0;
                             finishing_job = 0;
                             all_done = 1;
-                            std::cout << "готово" << std::endl;
+                            std::cout << "РіРѕС‚РѕРІРѕ" << std::endl;
                         } else {
                             wait_for_resp = 0;
                             packs_sent++;
-                            std::cout << " " << packs_sent << " пакетов из " << file_data.size() << " отправлено..." << std::endl;
+                            std::cout << " " << packs_sent << " РїР°РєРµС‚РѕРІ РёР· " << file_data.size() << " РѕС‚РїСЂР°РІР»РµРЅРѕ..." << std::endl;
                             if (file_data.size() == packs_sent) {
-                                std::cout << " завершение..." << std::endl;
+                                std::cout << " Р·Р°РІРµСЂС€РµРЅРёРµ..." << std::endl;
                                 finishing_job = 1;
                                 trans_started = 0;
                             }
@@ -261,7 +261,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
                 port->clearInputBuffer();
                 port->sendDataPack<uint8_t>(finish_byte);
-                std::cout << " байт EOT отправлен..." << std::endl;
+                std::cout << " Р±Р°Р№С‚ EOT РѕС‚РїСЂР°РІР»РµРЅ..." << std::endl;
                 wait_for_resp = 1;
             }
         }
@@ -272,7 +272,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
                 if (VK_ESCAPE == key) {
                     if (!all_done) {
-                        std::cout << "передача файла отменена" << std::endl;
+                        std::cout << "РїРµСЂРµРґР°С‡Р° С„Р°Р№Р»Р° РѕС‚РјРµРЅРµРЅР°" << std::endl;
                         all_done = 1;
                     }
                 } else if (VK_RETURN == key) {
@@ -287,7 +287,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
             uint8_t key = _getch();
 
             if (VK_ESCAPE == key) {
-                std::cout << "передача файла отменена" << std::endl;
+                std::cout << "РїРµСЂРµРґР°С‡Р° С„Р°Р№Р»Р° РѕС‚РјРµРЅРµРЅР°" << std::endl;
                 all_done = 1;
                 trans_started = 0;
                 finishing_job = 0;
@@ -310,7 +310,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
 
 uint32_t XModem::startTerminalMode() {
-    std::cout << "режим терминала..." << std::endl;
+    std::cout << "СЂРµР¶РёРј С‚РµСЂРјРёРЅР°Р»Р°..." << std::endl;
 
     while (1) {
         uint8_t got_one = 0;
