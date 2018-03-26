@@ -47,6 +47,8 @@ std::string CPort::clearInputBuffer() {
     while (got_one) {
         ret_val.push_back(readOneSymbol<uint8_t>(got_one));
     }
+
+    return ret_val;
 }
 
 
