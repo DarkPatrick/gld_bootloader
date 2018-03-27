@@ -3,7 +3,7 @@
 
 CPort::CPort(SPortParams port_params) {
     h_com = CreateFile(("\\\\.\\" + port_params.port_name).c_str(), GENERIC_READ | GENERIC_WRITE,
-        0, NULL, OPEN_EXISTING, 0, NULL);
+        0, nullptr, OPEN_EXISTING, 0, nullptr);
 
     if (h_com == INVALID_HANDLE_VALUE) {
         err.addError("error: cannot open com port...");
@@ -40,7 +40,7 @@ CPort::~CPort() {
 }
 
 
-std::string CPort::clearInputBuffer() {
+std::string CPort::clearInputBuffer() const {
     std::string ret_val = "";
     uint8_t got_one = 1;
 
@@ -58,6 +58,6 @@ void CPort::closeCommunication() {
 }
 
 
-SPortParams CPort::getParams() {
+SPortParams CPort::getParams() const {
     return port_params;
 }

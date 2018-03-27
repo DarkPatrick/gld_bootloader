@@ -23,7 +23,7 @@ std::string Errors::getLastError() {
 }
 
 
-size_t Errors::getErrorsNum() {
+size_t Errors::getErrorsNum() const {
     return errors.size();
 }
 

@@ -10,7 +10,7 @@ class Errors {
         ~Errors();
         void addError(const std::string &error);
         std::string getLastError();
-        size_t getErrorsNum();
+        size_t getErrorsNum() const;
         void clearAllErrors();
     private:
         std::vector<std::string> errors;

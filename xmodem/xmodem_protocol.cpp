@@ -20,7 +20,7 @@ XModem::~XModem() {
     err.clearAllErrors();
     std::vector<uint8_t>().swap(raw_data);
     std::vector<std::vector<uint8_t>>().swap(file_data);
-    delete port;
+    port.reset();
 }
 
 
@@ -52,7 +52,7 @@ void XModem::setDefaultCrcType(const CRC crc_type) {
 
 
 void XModem::openPort(const SPortParams port_params) {
-    port = new CPort(port_params);
+    port = std::move(std::unique_ptr<CPort>(new CPort(port_params)));
 }
 
 
@@ -104,12 +104,12 @@ void XModem::restartTransmission() {
 }
 
 
-DCB XModem::getDCB() {
+DCB XModem::getDCB() const {
     return port->getParams().dcb;
 }
 
 
-std::string XModem::getPortName() {
+std::string XModem::getPortName() const {
     return port->getParams().port_name;
 }
 
@@ -119,7 +119,7 @@ void XModem::setFileName(const std::string &file_name) {
 }
 
 
-std::string XModem::getFileName() {
+std::string XModem::getFileName() const {
     return file_name;
 }
 
@@ -174,7 +174,7 @@ uint32_t XModem::loadFile(const Protocol protocol) {
 }
 
 
-void XModem::terminalOutput(uint8_t byte) {
+void XModem::terminalOutput(uint8_t byte) const {
     std::vector<std::string> got_bytes(256);
 
     for (size_t i = 0; i < got_bytes.size(); ++i) {
@@ -309,7 +309,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 }
 
 
-uint32_t XModem::startTerminalMode() {
+uint32_t XModem::startTerminalMode() const {
     std::cout << "режим терминала..." << std::endl;
 
     while (1) {

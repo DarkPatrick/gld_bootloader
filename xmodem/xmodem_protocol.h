@@ -43,20 +43,20 @@ class XModem {
         uint32_t sendPack(std::vector<uint8_t> &data, const Protocol protocol = Protocol::PR_XMODEM_1K, const uint8_t clear_bufer = 0);
         void cancelTransmission();
         void restartTransmission();
-        DCB getDCB();
-        std::string getPortName();
+        DCB getDCB() const;
+        std::string getPortName() const;
         void setFileName(const std::string &file_name);
-        std::string getFileName();
+        std::string getFileName() const;
         uint32_t transmitFile(const Protocol protocol);
-        uint32_t startTerminalMode();
+        uint32_t startTerminalMode() const;
     private:
         std::vector<uint8_t> wrapData(HeaderBytes first_byte);
         uint32_t loadFile(const Protocol protocol);
-        void terminalOutput(uint8_t byte);
+        void terminalOutput(uint8_t byte) const;
     public:
         Errors err;
     private:
-        CPort *port;
+        std::unique_ptr<CPort> port;
         std::vector<uint8_t> raw_data;
         std::vector<std::vector<uint8_t>> file_data;
         uint8_t pack_num;
