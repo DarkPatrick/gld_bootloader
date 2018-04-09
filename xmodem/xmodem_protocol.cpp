@@ -310,7 +310,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
 
 uint32_t XModem::startTerminalMode() const {
-    std::cout << "режим терминала..." << std::endl;
+    std::cout << "terminal mode..." << std::endl;
 
     while (1) {
         uint8_t got_one = 0;

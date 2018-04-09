@@ -1,7 +1,39 @@
 #include "main.h"
 
 
-const std::string vesrion = "1.2.0";
+const std::string vesrion = "2.0.0";
+
+
+void launchUpdater(std::vector<std::string> &cmd_params) {
+    TCHAR sz_path[] = "Software\\gld_bootloader\\";
+    HKEY h_key;
+    std::string sz_params;
+    DWORD dw_buf_len;
+
+    for (auto param : cmd_params) {
+        sz_params.append(param + '\n');
+    }
+
+    RegCreateKeyEx(HKEY_CURRENT_USER, sz_path, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &h_key, NULL);
+    RegSetValueEx(h_key, "cmd params", 0, REG_SZ, (BYTE*)sz_params.c_str(), sz_params.size());
+    RegCloseKey(h_key);
+    system("start updater.exe");
+    RegOpenKeyEx(HKEY_CURRENT_USER, sz_path, 0, KEY_ALL_ACCESS, &h_key);
+    RegQueryValueEx(h_key, "cmd_params", NULL, NULL, (BYTE*)sz_params.c_str(), &dw_buf_len);
+
+    cmd_params.clear();
+
+    std::string param = "";
+
+    for (auto ch : sz_params) {
+        if (ch != '\n') {
+            param += ch;
+        } else {
+            cmd_params.push_back(param);
+            param = "";
+        }
+    }
+}
 
 
 
@@ -171,9 +203,7 @@ uint32_t main(const uint32_t argc, char** argv) {
         cmd_params.push_back(static_cast<std::string>(argv[i]));
     }
 
-    //setlocale(LC_ALL, "rus");
-    //SetConsoleCP(1251);
-    //SetConsoleOutputCP(1251);
+    launchUpdater(cmd_params);
 
     flashUpdate(0, cmd_params);
 
