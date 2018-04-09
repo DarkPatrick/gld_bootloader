@@ -66,7 +66,7 @@ uint32_t XModem::sendPack(std::vector<uint8_t> &data, const Protocol protocol, c
             (data.size() != PackSize::XMODEM_SIZE)) ||
             ((protocol == Protocol::PR_XMODEM_1K) &&
             (data.size() != PackSize::XMODEM_1K_SIZE))) {
-        err.addError("ошибка: несовпадение размера пакета с указанным в протоколе...");
+        err.addError("error: packet size doesn't match the protocol...");
         return 0;
     }
 
@@ -128,7 +128,7 @@ uint32_t XModem::loadFile(const Protocol protocol) {
     std::ifstream h_file(file_name, std::ios::binary);
 
     if (!h_file.is_open()) {
-        err.addError("ошибка: не удалось открыть файл...");
+        err.addError("error: couldn't open the file...");
         return 0;
     }
 
@@ -202,7 +202,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
     port->clearInputBuffer();
 
-    std::cout << std::endl << "готов к передаче файла..." << std::endl;
+    std::cout << std::endl << "ready to transmit..." << std::endl;
 
     uint32_t trans_started = 0, wait_for_resp = 0, finishing_job = 0, all_done = 0;
     size_t packs_sent = 0;
@@ -223,20 +223,20 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
                     finishing_job = 0;
                     packs_sent = 0;
                     restartTransmission();
-                    std::cout << " передача началась..." << std::endl;
+                    std::cout << " transmission started..." << std::endl;
                 } else if (wait_for_resp) {
                     if (ServiceCmds::ACK == res) {
                         if (finishing_job) {
                             wait_for_resp = 0;
                             finishing_job = 0;
                             all_done = 1;
-                            std::cout << "готово" << std::endl;
+                            std::cout << "all done" << std::endl;
                         } else {
                             wait_for_resp = 0;
                             packs_sent++;
-                            std::cout << " " << packs_sent << " пакетов из " << file_data.size() << " отправлено..." << std::endl;
+                            std::cout << " " << packs_sent << " packets out of " << file_data.size() << " sent..." << std::endl;
                             if (file_data.size() == packs_sent) {
-                                std::cout << " завершение..." << std::endl;
+                                std::cout << " completing..." << std::endl;
                                 finishing_job = 1;
                                 trans_started = 0;
                             }
@@ -261,7 +261,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
                 port->clearInputBuffer();
                 port->sendDataPack<uint8_t>(finish_byte);
-                std::cout << " байт EOT отправлен..." << std::endl;
+                std::cout << " EOT byte sent..." << std::endl;
                 wait_for_resp = 1;
             }
         }
@@ -272,7 +272,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
 
                 if (VK_ESCAPE == key) {
                     if (!all_done) {
-                        std::cout << "передача файла отменена" << std::endl;
+                        std::cout << "file transmission canceled" << std::endl;
                         all_done = 1;
                     }
                 } else if (VK_RETURN == key) {
@@ -287,7 +287,7 @@ uint32_t XModem::transmitFile(const Protocol protocol) {
             uint8_t key = _getch();
 
             if (VK_ESCAPE == key) {
-                std::cout << "передача файла отменена" << std::endl;
+                std::cout << "file transmission canceled" << std::endl;
                 all_done = 1;
                 trans_started = 0;
                 finishing_job = 0;

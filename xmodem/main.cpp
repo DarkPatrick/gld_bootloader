@@ -1,6 +1,10 @@
 #include "main.h"
 
 
+const std::string vesrion = "1.2.0";
+
+
+
 uint8_t fromStringToHex(const std::string& s) {
     std::istringstream iss(s);
     uint32_t res;
@@ -65,30 +69,30 @@ SPortParams readPortParams(const std::vector<std::string> &params, std::string &
 
 void printData(XModem &protocol) {
     std::vector<std::string> parity{
-        "нет",
-        "по нечётности",
-        "по чётности",
-        "по единичному биту",
-        "по нулевому биту"
+        "no",
+        "odd",
+        "even",
+        "mark",
+        "space"
     },
-        stop_bits{ "один", "полтора", "два" };
+        stop_bits{ "one", "half as", "two" };
 
     DCB dcb = protocol.getDCB();
     std::vector<std::string> captions{
-        "ООО «НПК «Электрооптика» ",
-        "GLD_BOOTLOADER © ",
-        "версия: 1.1.0 "
+        "\"Electrooptica\" ",
+        "GLD_BOOTLOADER ",
+        "version: " + vesrion + " "
     };
 
-    captions.push_back("порт: " + protocol.getPortName() +
+    captions.push_back("port: " + protocol.getPortName() +
         "; " + std::to_string(dcb.BaudRate) +
-        " бод; " + std::to_string(dcb.ByteSize) +
-        " байт; контроль: " +
+        " bod; " + std::to_string(dcb.ByteSize) +
+        " bytes; parity control: " +
         parity.at(dcb.Parity) +
-        "; стоповые биты: " +
+        "; stop bits: " +
         stop_bits.at(dcb.StopBits)
     );
-    captions.push_back("имя файла: " + protocol.getFileName());
+    captions.push_back("file name: " + protocol.getFileName());
 
     std::string caption = captions.at(0) +
         captions.at(1) +
@@ -167,13 +171,13 @@ uint32_t main(const uint32_t argc, char** argv) {
         cmd_params.push_back(static_cast<std::string>(argv[i]));
     }
 
-    setlocale(LC_ALL, "rus");
-    SetConsoleCP(1251);
-    SetConsoleOutputCP(1251);
+    //setlocale(LC_ALL, "rus");
+    //SetConsoleCP(1251);
+    //SetConsoleOutputCP(1251);
 
     flashUpdate(0, cmd_params);
 
-    std::cout << "нажми 'enter' для выхода..." << std::endl;
+    std::cout << "press 'enter' to exit..." << std::endl;
     getchar();
 
     return 0;
