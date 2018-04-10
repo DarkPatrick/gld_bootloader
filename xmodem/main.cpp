@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-const std::string version = "2.0.0";
+const std::string version = "2.0.1";
 
 
 void launchUpdater(std::vector<std::string> &cmd_params) {
@@ -15,7 +15,7 @@ void launchUpdater(std::vector<std::string> &cmd_params) {
     }
 
     RegCreateKeyEx(HKEY_CURRENT_USER, sz_path, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &h_key, NULL);
-    RegSetValueEx(h_key, "cmd params", 0, REG_SZ, (BYTE*)sz_params.c_str(), sz_params.size());
+    RegSetValueEx(h_key, "cmd_params", 0, REG_SZ, (BYTE*)sz_params.c_str(), sz_params.size());
     RegCloseKey(h_key);
     system(("start updater.exe DarkPatrick gld_bootloader " + version + " gld_boot_x86.exe").c_str());
     RegOpenKeyEx(HKEY_CURRENT_USER, sz_path, 0, KEY_ALL_ACCESS, &h_key);
@@ -52,7 +52,7 @@ SPortParams readPortParams(const std::vector<std::string> &params, std::string &
 
     file_name = "";
     port_params.port_name = "COM0";
-    port_params.dcb.BaudRate = 115200;
+    port_params.dcb.BaudRate = 921600;
     port_params.dcb.ByteSize = 8;
     port_params.dcb.Parity = NOPARITY;
     port_params.dcb.StopBits = ONESTOPBIT;
