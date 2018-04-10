@@ -1,7 +1,7 @@
 #include "main.h"
 
 
-const std::string vesrion = "2.0.0";
+const std::string version = "2.0.0";
 
 
 void launchUpdater(std::vector<std::string> &cmd_params) {
@@ -17,7 +17,7 @@ void launchUpdater(std::vector<std::string> &cmd_params) {
     RegCreateKeyEx(HKEY_CURRENT_USER, sz_path, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &h_key, NULL);
     RegSetValueEx(h_key, "cmd params", 0, REG_SZ, (BYTE*)sz_params.c_str(), sz_params.size());
     RegCloseKey(h_key);
-    system("start updater.exe");
+    system(("start updater.exe DarkPatrick gld_bootloader " + version + " gld_boot_x86.exe").c_str());
     RegOpenKeyEx(HKEY_CURRENT_USER, sz_path, 0, KEY_ALL_ACCESS, &h_key);
     RegQueryValueEx(h_key, "cmd_params", NULL, NULL, (BYTE*)sz_params.c_str(), &dw_buf_len);
 
@@ -113,7 +113,7 @@ void printData(XModem &protocol) {
     std::vector<std::string> captions{
         "\"Electrooptica\" ",
         "GLD_BOOTLOADER ",
-        "version: " + vesrion + " "
+        "version: " + version + " "
     };
 
     captions.push_back("port: " + protocol.getPortName() +
